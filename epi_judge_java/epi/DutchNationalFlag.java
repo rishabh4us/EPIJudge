@@ -1,8 +1,10 @@
 package epi;
+
 import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
+
 import java.util.ArrayList;
 import java.util.List;
 public class DutchNationalFlag {
@@ -10,7 +12,28 @@ public class DutchNationalFlag {
 
   public static void dutchFlagPartition(int pivotIndex, List<Color> A) {
     // TODO - you fill in here.
+    Color pivot = A.get(pivotIndex);
+    int smaller = 0;
+    for (int i = 0; i < A.size(); i++) {
+      if (A.get(i).ordinal() < pivot.ordinal()) {
+        swap(A, i, smaller++);
+      }
+    }
+    int larger = A.size() - 1;
+    for (int i = A.size() - 1; i >= 0; i--) {
+      if (A.get(i).ordinal() > pivot.ordinal()) {
+        swap(A, i, larger--);
+      }
+    }
+
     return;
+  }
+
+  static void swap(List<Color> A, int i, int j) {
+    Color tmp = A.get(i);
+    A.set(i, A.get(j));
+    A.set(j, tmp);
+
   }
   @EpiTest(testDataFile = "dutch_national_flag.tsv")
   public static void dutchFlagPartitionWrapper(TimedExecutor executor,

@@ -3,25 +3,44 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
-import java.util.List;
-import java.util.NoSuchElementException;
+
+import java.util.*;
+
 public class StackWithMax {
 
+  private static class Element{
+    Integer val;
+    Integer max;
+    Element(int v, int max){
+      val = v;
+      this.max = max;
+    }
+  }
+
   public static class Stack {
+    Deque<Element> data = new ArrayDeque<>();
+
     public boolean empty() {
       // TODO - you fill in here.
-      return true;
+      return data.isEmpty();
     }
     public Integer max() {
       // TODO - you fill in here.
-      return 0;
+      if (data.isEmpty()) throw new EmptyStackException();
+      return data.peek().max;
     }
     public Integer pop() {
       // TODO - you fill in here.
-      return 0;
+      return data.pop().val;
     }
     public void push(Integer x) {
       // TODO - you fill in here.
+      if (data.isEmpty()){
+        data.push(new Element(x,x));
+        return;
+      }
+
+      data.push(new Element(x, Math.max(x,data.peek().max)));
       return;
     }
   }
