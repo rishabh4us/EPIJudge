@@ -1,11 +1,15 @@
 package epi;
+
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
+
+import static epi.SearchMaze.Color.BLACK;
+import static epi.SearchMaze.Color.WHITE;
+
 public class SearchMaze {
   @EpiUserType(ctorParams = {int.class, int.class})
 
@@ -40,29 +44,58 @@ public class SearchMaze {
   public static List<Coordinate> searchMaze(List<List<Color>> maze,
                                             Coordinate s, Coordinate e) {
     // TODO - you fill in here.
-    return Collections.emptyList();
+    List<Coordinate> path = new ArrayList<>();
+    Set<Coordinate> visited = new HashSet<>();
+    helper(maze, s, e, path, visited);
+    return path;
   }
+
+  private static boolean helper(List<List<Color>> maze, Coordinate curr, Coordinate e, List<Coordinate> path, Set<Coordinate> visited) {
+    if (!(curr.x > 0 && curr.y > 0
+            && curr.x < maze.size() && curr.y < maze.get(curr.x).size()
+            && !visited.contains(curr)))
+      return false;
+
+    path.add(curr);
+    visited.add(curr);
+    if (curr.equals(e)) return true;
+
+    maze.get(curr.x).set(curr.y, BLACK);
+
+    for (Coordinate next : Arrays.asList(new Coordinate(curr.x + 1, curr.y),
+            new Coordinate(curr.x, curr.y + 1),
+            new Coordinate(curr.x, curr.y - 1),
+            new Coordinate(curr.x - 1, curr.y))) {
+
+
+      if (helper(maze, next, e, path, visited)) return true;
+
+    }
+    path.remove(path.size() - 1);
+    return false;
+  }
+
   public static boolean pathElementIsFeasible(List<List<Integer>> maze,
                                               Coordinate prev, Coordinate cur) {
     if (!(0 <= cur.x && cur.x < maze.size() && 0 <= cur.y &&
-          cur.y < maze.get(cur.x).size() && maze.get(cur.x).get(cur.y) == 0)) {
+            cur.y < maze.get(cur.x).size() && maze.get(cur.x).get(cur.y) == 0)) {
       return false;
     }
     return cur.x == prev.x + 1 && cur.y == prev.y ||
-        cur.x == prev.x - 1 && cur.y == prev.y ||
-        cur.x == prev.x && cur.y == prev.y + 1 ||
-        cur.x == prev.x && cur.y == prev.y - 1;
+            cur.x == prev.x - 1 && cur.y == prev.y ||
+            cur.x == prev.x && cur.y == prev.y + 1 ||
+            cur.x == prev.x && cur.y == prev.y - 1;
   }
 
   @EpiTest(testDataFile = "search_maze.tsv")
   public static boolean searchMazeWrapper(List<List<Integer>> maze,
                                           Coordinate s, Coordinate e)
-      throws TestFailure {
+          throws TestFailure {
     List<List<Color>> colored = new ArrayList<>();
     for (List<Integer> col : maze) {
       List<Color> tmp = new ArrayList<>();
       for (Integer i : col) {
-        tmp.add(i == 0 ? Color.WHITE : Color.BLACK);
+        tmp.add(i == 0 ? WHITE : Color.BLACK);
       }
       colored.add(tmp);
     }
@@ -86,9 +119,9 @@ public class SearchMaze {
 
   public static void main(String[] args) {
     System.exit(
-        GenericTest
-            .runFromAnnotations(args, "SearchMaze.java",
-                                new Object() {}.getClass().getEnclosingClass())
-            .ordinal());
+            GenericTest
+                    .runFromAnnotations(args, "SearchMaze.java",
+                            new Object() {}.getClass().getEnclosingClass())
+                    .ordinal());
   }
 }
