@@ -6,6 +6,15 @@ public class IsStringPalindromicPunctuation {
 
   public static boolean isPalindrome(String s) {
     // TODO - you fill in here.
+
+    int i = 0, j = s.length() - 1;
+    while (i <= j) {
+      if (!Character.isLetterOrDigit(s.charAt(i))) i++;
+      else if(!Character.isLetterOrDigit(s.charAt(j))) j--;
+      else{
+        if (!(s.charAt(i++) + "").equalsIgnoreCase(s.charAt(j--) + "")) return false;
+      }
+    }
     return true;
   }
 

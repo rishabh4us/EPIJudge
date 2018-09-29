@@ -1,25 +1,72 @@
 package epi;
+
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
+
 import java.util.List;
+import java.util.NoSuchElementException;
+
 public class CircularQueue {
 
   public static class Queue {
-    public Queue(int capacity) {}
+
+    int head;
+    int tail;
+    int numElements;
+    int[] items;
+    int capacity;
+
+    public Queue(int capacity) {
+      items = new int[capacity];
+      head = 0;
+      tail = 0;
+      numElements = 0;
+      this.capacity = capacity;
+    }
+
     public void enqueue(Integer x) {
       // TODO - you fill in here.
+
+      if (numElements == capacity) {
+        // double & move
+        System.out.println("doubling array");
+        int newCapacity = 2 * capacity;
+
+        int[] newArr = new int[newCapacity];
+        for (int i = 0; i < numElements; i++) {
+          newArr[i] = items[head];
+          head = (head + 1) % items.length;
+        }
+        head = 0;
+        tail = numElements;
+        items = newArr;
+        capacity = newCapacity;
+      }
+      items[tail] = x;
+      tail = (tail + 1) % items.length;
+      numElements++;
+
       return;
     }
+
     public Integer dequeue() {
       // TODO - you fill in here.
-      return 0;
+      if (numElements == 0) throw new NoSuchElementException();
+
+      int ans = items[head];
+      head = (head + 1) % items.length;
+      numElements--;
+
+      return ans;
     }
+
     public int size() {
       // TODO - you fill in here.
-      return 0;
+      return numElements;
     }
+
     @Override
     public String toString() {
       // TODO - you fill in here.
