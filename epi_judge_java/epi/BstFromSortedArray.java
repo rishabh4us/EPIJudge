@@ -11,8 +11,15 @@ public class BstFromSortedArray {
   public static BstNode<Integer>
   buildMinHeightBSTFromSortedArray(List<Integer> A) {
     // TODO - you fill in here.
-    return null;
+    return sol(A,0,A.size()-1);
   }
+
+  private static BstNode<Integer> sol(List<Integer> ip, int s, int e) {
+    if(s>e) return null;
+    int mid = s+(e-s)/2;
+    return new BstNode<>(ip.get(mid), sol(ip,s,mid-1), sol(ip, mid+1, e));
+  }
+
   @EpiTest(testDataFile = "bst_from_sorted_array.tsv")
   public static int
   buildMinHeightBSTFromSortedArrayWrapper(TimedExecutor executor,

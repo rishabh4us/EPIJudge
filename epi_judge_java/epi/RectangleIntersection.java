@@ -52,10 +52,28 @@ public class RectangleIntersection {
     }
   }
   @EpiTest(testDataFile = "rectangle_intersection.tsv")
-  public static Rectangle intersectRectangle(Rectangle R1, Rectangle R2) {
+  public static Rectangle intersectRectangle(Rectangle r1, Rectangle r2) {
     // TODO - you fill in here.
-    return new Rectangle(0, 0, 0, 0);
+    if(isIntersecting(r1,r2)){
+      int newX = Math.max(r1.x, r2.x);
+      int newY = Math.max(r1.y, r2.y);
+      return new Rectangle(newX, newY,
+              Math.min(r1.x+r1.width,r2.x+r2.width) - newX,
+              Math.min(r1.y+r1.height, r2.y+r2.height) - newY);
+    }
+
+    return new Rectangle(0, 0, -1, -1);
   }
+
+  private static boolean isIntersecting(Rectangle r1, Rectangle r2) {
+    // if right edge is of one is before start of another
+    // OR if bottom edge of 1 is above top edge of another
+
+    if(r1.x+r1.width < r2.x || r2.x+r2.width < r1.x) return false;
+    if(r1.y+r1.height < r2.y || r2.y+r2.height < r1.y) return false;
+
+    return true;
+   }
 
   public static void main(String[] args) {
     System.exit(
