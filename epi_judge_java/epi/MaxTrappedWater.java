@@ -7,7 +7,19 @@ public class MaxTrappedWater {
 
   public static int getMaxTrappedWater(List<Integer> heights) {
     // TODO - you fill in here.
-    return 0;
+    int i=0,j=heights.size()-1;
+    int max = 0 ;
+    int water = -1;
+    while(i<j){
+      water = Math.min(heights.get(i), heights.get(j)) * (j-i);
+      if (water > max) max = water;
+      if (heights.get(i) < heights.get(j)) {
+        i++;
+      } else {
+        j--;
+      }
+    }
+    return max;
   }
 
   public static void main(String[] args) {

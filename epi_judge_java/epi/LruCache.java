@@ -3,22 +3,99 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class LruCache {
-  LruCache(final int capacity) {}
+  private static class Node {
+    Node(int k, int v, Node n, Node p) {
+      key = k;
+      value = v;
+      next = n;
+      prev = p ;
+    }
+
+    Integer value;
+    Integer key;
+    Node next;
+    Node prev;
+  }
+
+  Node head, tail;
+  Map<Integer, Node> hm;
+  int capacity;
+
+  LruCache(final int capacity) {
+    if (capacity <= 0) throw new IllegalArgumentException("cannot be empty");
+    this.capacity = capacity;
+    head = new Node(-1,-1,null, null);
+    tail = new Node (-10,-10,null, null);
+    head.next = tail;
+    tail.prev = head;
+    hm = new HashMap<>(capacity);
+  }
+
+  private void addFront(Node n){
+
+    head.next.prev = n;
+    n.next = head.next;
+    head.next = n;
+    n.prev = head;
+  }
+
+  private void removeAny(Node n){
+    n.next.prev = n.prev;
+    n.prev.next = n.next;
+  }
+
+  private void moveToFront(Node n){
+    removeAny(n);
+    addFront(n);
+  }
+
   public Integer lookup(Integer key) {
     // TODO - you fill in here.
-    return 0;
+    if (!hm.containsKey(key)) return -1 ; //throw new NoSuchElementException("key not found");
+
+    Node n = hm.get(key);
+    moveToFront(n);
+    return n.value;
+
   }
+
   public void insert(Integer key, Integer value) {
     // TODO - you fill in here.
-    return;
+    if (hm.containsKey(key)){
+      moveToFront(hm.get(key));
+      return;
+      // update value if needed
+//      Node n = hm.get(key);
+//      n.value = value;
+    }
+
+    Node n = new Node(key, value, null, null);
+    if(hm.size()==capacity) {
+      hm.remove(tail.prev.key);
+      removeAny(tail.prev);
+    }
+    hm.put(key, n);
+    addFront(n);
+
   }
+
   public Boolean erase(Object key) {
     // TODO - you fill in here.
+    if (!(key instanceof Integer)) return false;
+    if (hm.isEmpty() || !hm.containsKey(key)) return false;
+    Node n = hm.get(key);
+    hm.remove(key);
+    removeAny(n);
     return true;
   }
+
   @EpiUserType(ctorParams = {String.class, int.class, int.class})
   public static class Op {
     String code;
