@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class TraitsFactory {
-  private static final Map<Type, SerializationTraits> PRIMITIVE_TYPES_MAPPING;
+  private static final HashMap PRIMITIVE_TYPES_MAPPING;
 
   static {
-    PRIMITIVE_TYPES_MAPPING = new HashMap<>() {
+    PRIMITIVE_TYPES_MAPPING = new HashMap() {
       {
         put(String.class, new StringTraits());
         put(Integer.class, new IntegerTraits());
@@ -65,7 +65,7 @@ public class TraitsFactory {
       }
     }
 
-    SerializationTraits mapped = PRIMITIVE_TYPES_MAPPING.get(type);
+    SerializationTraits mapped = (SerializationTraits) PRIMITIVE_TYPES_MAPPING.get(type);
     if (mapped != null) {
       return mapped;
     }
