@@ -5,6 +5,7 @@ import epi.test_framework.GenericTest;
 import epi.test_framework.TimedExecutor;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 public class IntervalsUnion {
 
@@ -20,7 +21,69 @@ public class IntervalsUnion {
 
   public static List<Interval> unionOfIntervals(List<Interval> intervals) {
     // TODO - you fill in here.
-    return Collections.emptyList();
+
+    Collections.sort(intervals, new Comparator<Interval>(){
+      public int compare(Interval a, Interval b) {
+//        if(a.left.val == b.left.val && a.right.val == b.right.val){
+//          if(a.left.isClosed == b.left.isClosed) return a.right.isClosed ? -1 : 1;
+//          else return b.left.isClosed ? -1 : 1;
+//        }
+        if(a.left.val != b.left.val)
+          return a.left.val - b.left.val;
+
+
+        if(a.left.isClosed && ! b.left.isClosed) return -1;
+        else if(!a.left.isClosed && b.left.isClosed) return 1;
+        else return 0;
+
+//        return a.right.val - b.right.val;
+
+      }
+    });
+
+    List<Interval> res = new ArrayList<>();
+    Interval curr = intervals.get(0);
+    int j = 0;
+    while (j < intervals.size()) {
+
+
+      // if there is overlap
+      Interval item = intervals.get(j);
+      if (
+              (curr.right.val > item.left.val) ||
+                      (curr.right.val == item.left.val &&
+                              (curr.right.isClosed | item.left.isClosed)
+                      )
+      ) {
+
+        // handle open close -- for end of interval
+        if (curr.right.val < item.right.val) {
+
+          curr.right.val = item.right.val;
+          curr.right.isClosed = item.right.isClosed;
+
+        }else if (curr.right.val == item.right.val) {
+
+          curr.right.isClosed = curr.right.isClosed | item.right.isClosed;
+
+        }
+
+        // handle open close of start of interval if same // not needed of we sort on all closed intervals first
+        if(curr.left.val == item.left.val){
+          curr.left.isClosed = curr.left.isClosed | item.left.isClosed;
+        }
+
+      }
+      else {
+        res.add(curr);
+        curr = item;
+      }
+
+      j++;
+    }
+    res.add(curr);
+
+    return res;
   }
   @EpiUserType(
       ctorParams = {int.class, boolean.class, int.class, boolean.class})

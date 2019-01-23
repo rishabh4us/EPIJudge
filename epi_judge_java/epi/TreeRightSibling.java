@@ -2,8 +2,9 @@ package epi;
 import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TimedExecutor;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
+
 public class TreeRightSibling {
   public static class BinaryTreeNode<T> {
     public T data;
@@ -15,8 +16,38 @@ public class TreeRightSibling {
 
   public static void constructRightSibling(BinaryTreeNode<Integer> tree) {
     // TODO - you fill in here.
+    if(tree == null) return;
+    Deque<BinaryTreeNode<Integer>> currQ = new ArrayDeque<>();
+    currQ.add(tree);
+
+    while (!currQ.isEmpty()){
+      addLink(currQ);
+      Deque<BinaryTreeNode<Integer>> temp = new ArrayDeque<>();
+      Iterator<BinaryTreeNode<Integer>> iter = currQ.iterator();
+      while(iter.hasNext()){
+        BinaryTreeNode<Integer> c = iter.next();
+        if(c.left!=null)temp.add(c.left);
+        if(c.right!=null)temp.add(c.right);
+      }
+
+      currQ = temp;
+    }
     return;
   }
+
+  private static void addLink(Deque<BinaryTreeNode<Integer>> currQ) {
+    Iterator<BinaryTreeNode<Integer>> iter = currQ.iterator();
+
+    BinaryTreeNode<Integer> prev = null;
+    while (iter.hasNext()){
+      BinaryTreeNode<Integer> next = iter.next();
+      if(prev != null) {
+        prev.next = next;
+      }
+      prev= next;
+    }
+  }
+
   private static BinaryTreeNode<Integer>
   cloneTree(BinaryTree<Integer> original) {
     if (original == null) {

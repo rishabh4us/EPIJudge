@@ -4,13 +4,64 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class LowestCommonAncestorCloseAncestor {
 
   public static BinaryTree<Integer> LCA(BinaryTree<Integer> node0,
                                         BinaryTree<Integer> node1) {
     // TODO - you fill in here.
+
+    Set<BinaryTree<Integer>> visited = new HashSet<BinaryTree<Integer>>();
+
+    while(node0 != null || node1 != null){
+      if(node0 != null){
+        if(visited.contains(node0)) return node0;
+        else {
+          visited.add(node0);
+          node0 = node0.parent;
+
+        }
+      }
+      if(node1 != null){
+        if(visited.contains(node1)) return node1;
+        else {
+          visited.add(node1);
+          node1 = node1.parent;
+        }
+      }
+    }
+
     return null;
+//    return wrongSolutionButClose(node0, node1, visited);
   }
+
+  private static boolean checkOrAdd(BinaryTree<Integer> n, Set<BinaryTree<Integer>> visited) {
+
+    return false;
+  }
+
+  private static BinaryTree<Integer> wrongSolutionButClose(BinaryTree<Integer> node0, BinaryTree<Integer> node1, Set<BinaryTree<Integer>> visited) {
+    while( node0 != null && node1 != null){
+      if(node0==node1) return node0;
+
+      if(visited.contains(node0)) return node0;
+      if(visited.contains(node1)) return node1;
+
+      visited.add(node0);
+      visited.add(node1);
+
+      node0=node0.parent;
+      node1=node1.parent;
+
+
+    }
+
+    return node0==null? node1:node0;
+  }
+
   @EpiTest(testDataFile = "lowest_common_ancestor.tsv")
   public static int lcaWrapper(TimedExecutor executor, BinaryTree<Integer> tree,
                                Integer key0, Integer key1) throws Exception {

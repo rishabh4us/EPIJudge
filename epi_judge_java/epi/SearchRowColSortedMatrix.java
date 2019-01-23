@@ -7,7 +7,18 @@ public class SearchRowColSortedMatrix {
 
   public static boolean matrixSearch(List<List<Integer>> A, int x) {
     // TODO - you fill in here.
-    return true;
+    if(A.isEmpty()) return false;
+
+    int r = 0, c = A.get(0).size()-1;
+
+    while( r<A.size()&&c>=0){
+
+      if(A.get(r).get(c) == x) return true;
+      else if(A.get(r).get(c)<x) r++;
+      else c--;
+    }
+
+    return false;
   }
 
   public static void main(String[] args) {

@@ -11,8 +11,48 @@ import java.util.Set;
 public class SudokuSolve {
   public static boolean solveSudoku(List<List<Integer>> partialAssignment) {
     // TODO - you fill in here.
-    return true;
+
+
+
+
+
+    return sol(partialAssignment, 0,0);
   }
+
+  private static boolean sol(List<List<Integer>> ip, int r, int c) {
+
+    if(c==ip.size()) return sol(ip,r+1,0);
+    if(r==ip.size()) return true;
+
+    if(ip.get(r).get(c) != 0) return  sol(ip,r,c+1);
+
+    for (int i=1; i<=ip.size(); i++){
+      if(isValid(ip,r,c,i)){
+        ip.get(r).set(c,i);
+        if(sol(ip,r,c+1))
+          return true;
+      }
+      ip.get(r).set(c,0); // reset
+    }
+    return false;
+  }
+
+  private static boolean isValid(List<List<Integer>> ip, int r, int c, int val) {
+    for(int i=0;i<ip.size();i++){
+      if(ip.get(i).get(c)==val) return false;
+      if(ip.get(r).get(i)==val) return false;
+    }
+    int zoneSize = (int) Math.sqrt(ip.size());
+    int rzone = r/zoneSize, czone = c/zoneSize;
+    for( int i = 0 ; i<zoneSize; i++){
+      for( int j = 0 ; j<zoneSize; j++){
+        if(ip.get(i+rzone*zoneSize).get(j+czone*zoneSize) == val) return false;
+      }
+    }
+    return true;
+
+  }
+
   @EpiTest(testDataFile = "sudoku_solve.tsv")
   public static void solveSudokuWrapper(TimedExecutor executor,
                                         List<List<Integer>> partialAssignment)

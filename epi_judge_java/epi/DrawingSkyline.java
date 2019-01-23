@@ -45,6 +45,8 @@ public class DrawingSkyline {
 
   public static List<Rectangle> drawingSkylines(List<Rectangle> buildings) {
     // TODO - you fill in here.
+
+
     return null;
   }
 

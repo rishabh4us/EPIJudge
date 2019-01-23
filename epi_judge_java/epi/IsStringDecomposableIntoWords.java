@@ -3,15 +3,38 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
+
 public class IsStringDecomposableIntoWords {
 
   public static List<String>
   decomposeIntoDictionaryWords(String domain, Set<String> dictionary) {
     // TODO - you fill in here.
-    return Collections.emptyList();
+    List<String> ans = sol(domain, dictionary, 0, new HashMap<>());
+    System.out.println(ans);
+    return ans == null ? new ArrayList<>(): ans;
+  }
+
+  private static List<String> sol(String ip, Set<String> dictionary, int s, Map<Integer, List<String>> cache) {
+    if(cache.get(s) != null) return cache.get(s);
+
+    if(s==ip.length()) return new ArrayList<>();
+
+    for(int i = s ; i<ip.length(); i++){
+
+      String currWord = ip.substring(s, i + 1);
+      if(dictionary.contains(currWord)){
+        List<String> child = sol(ip,dictionary, i+1, cache);
+
+        if(child == null) return null;
+        cache.put(i+1, child);
+        child.add(0,currWord);
+        return child;
+      }
+    }
+
+    return null;
   }
   @EpiTest(testDataFile = "is_string_decomposable_into_words.tsv")
   public static void decomposeIntoDictionaryWordsWrapper(TimedExecutor executor,

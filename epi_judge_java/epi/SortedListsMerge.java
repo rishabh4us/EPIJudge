@@ -1,12 +1,16 @@
 package epi;
 import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
+
+import java.util.Collections;
+
 public class SortedListsMerge {
   @EpiTest(testDataFile = "sorted_lists_merge.tsv")
   //@include
   public static ListNode<Integer> mergeTwoSortedLists(ListNode<Integer> L1,
                                                       ListNode<Integer> L2) {
     // TODO - you fill in here.
+//    Collections.sort();
     return null;
   }
 

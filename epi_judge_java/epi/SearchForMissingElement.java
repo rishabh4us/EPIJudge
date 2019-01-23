@@ -49,7 +49,19 @@ public class SearchForMissingElement {
 
   public static DuplicateAndMissing findDuplicateMissing(List<Integer> A) {
     // TODO - you fill in here.
-    return new DuplicateAndMissing(0, 0);
+    DuplicateAndMissing ans = new DuplicateAndMissing(-1, -1);
+    for (int i = 0; i < A.size(); i++) {
+      int position = A.get(i) >= 0 ? A.get(i) : Math.abs(A.get(i)) - 1;
+      if (A.get(position) >= 0) {
+        A.set(position, -1 * (A.get(position) + 1));
+
+      } else ans.duplicate = position;
+    }
+    for (int i = 0; i < A.size(); i++) {
+      if (A.get(i) >= 0) ans.missing = (i);
+    }
+
+    return ans;
   }
 
   public static void main(String[] args) {
