@@ -14,16 +14,16 @@ public class Permutations {
   public static List<List<Integer>> permutations(List<Integer> A) {
     // TODO - you fill in here.
     List<List<Integer>> ans= new ArrayList<>();
-    List<Integer> curr = new ArrayList<>();
+//    List<Integer> curr = new ArrayList<>();
 
-    sol(A,0,curr, ans);
-
+    sol(A,0, ans);
+//    System.out.println(ans);
     return ans;
   }
 
-  private static void sol(List<Integer> ip, int s, List<Integer> curr, List<List<Integer>> ans) {
+  private static void sol(List<Integer> ip, int s, List<List<Integer>> ans) {
     if(s==ip.size()){
-      ans.add(new ArrayList<>(curr));
+      ans.add(new ArrayList<>(ip));
       return;
     }
 
@@ -31,9 +31,9 @@ public class Permutations {
     //choose n & permute remaining n-1
     for(int i=s; i<ip.size(); i++ ){
       Collections.swap(ip, s, i);
-      curr.add(ip.get(s));
-      sol(ip,s+1,curr,ans);
-      curr.remove(curr.size()-1);
+//      curr.add(ip.get(s));
+      sol(ip,s+1, ans);
+//      curr.remove(curr.size()-1);
       Collections.swap(ip, s, i);
     }
   }

@@ -3,14 +3,9 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+
+import java.util.*;
+
 public class GraphClone {
 
   public static class GraphVertex {
@@ -25,8 +20,39 @@ public class GraphClone {
 
   public static GraphVertex cloneGraph(GraphVertex graph) {
     // TODO - you fill in here.
-    return new GraphVertex(0);
+
+
+    Map<GraphVertex, GraphVertex> oldNewMap = new HashMap<>();
+
+    Deque<GraphVertex> queue = new ArrayDeque<>();
+
+    queue.add(graph);
+    while (!queue.isEmpty()) {
+      GraphVertex h = queue.remove();
+
+      GraphVertex c = getCloned(oldNewMap, h);
+
+      for (GraphVertex neighbour : h.edges) {
+        if(!oldNewMap.containsKey(neighbour)) queue.add(neighbour);
+
+        c.edges.add(getCloned(oldNewMap, neighbour));
+
+      }
+    }
+
+
+//    return new GraphVertex(0);
+    return getCloned(oldNewMap, graph);
   }
+
+  private static GraphVertex getCloned(Map<GraphVertex, GraphVertex> oldNewMap, GraphVertex h) {
+    if(!oldNewMap.containsKey(h)){
+      oldNewMap.put(h, new GraphVertex(h.label));
+
+    }
+    return oldNewMap.get(h);
+  }
+
   private static List<Integer> copyLabels(List<GraphVertex> edges) {
     List<Integer> labels = new ArrayList<>();
     for (GraphVertex e : edges) {

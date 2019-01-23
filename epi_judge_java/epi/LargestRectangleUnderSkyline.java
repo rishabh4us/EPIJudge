@@ -12,6 +12,35 @@ public class LargestRectangleUnderSkyline {
     // TODO - you fill in here.
 //    return nSquaredSolution(heights);
 
+//    return betterSol(heights);
+
+    return recursiveSol(heights, 0, heights.size()-1);
+
+  }
+
+  private static int recursiveSol(List<Integer> ip, int s, int e) {
+    if(s>e)
+      return 0;
+
+    int min = ip.get(s);
+    int minIndex = s;
+    int c = s;
+
+    while(c<=e){
+      if(ip.get(c) < min) {
+        min = ip.get(c);
+        minIndex = c;
+      }
+      c++;
+    }
+
+    int leftArea = recursiveSol(ip,s,minIndex-1);
+    int rightArea = recursiveSol(ip, minIndex+1, e);
+
+    return Math.max((e-s+1)*min, Math.max(leftArea, rightArea));
+  }
+
+  private static int betterSol(List<Integer> heights) {
     Deque<Integer> stack = new ArrayDeque<>();
     int max = 0;
 //    stack.push(-1);

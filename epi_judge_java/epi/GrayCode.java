@@ -3,16 +3,39 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
+
 public class GrayCode {
 
   public static List<Integer> grayCode(int numBits) {
     // TODO - you fill in here.
-    return Collections.emptyList();
+    List<Integer> res = new ArrayList<>(Arrays.asList(0));
+    sol(numBits, new HashSet<Integer>(Arrays.asList(0)), res);
+    return res;
   }
+
+  private static boolean sol(int n, HashSet<Integer> visited, List<Integer> ans) {
+    if(ans.size()== Math.pow(2,n)){
+      return differsByOneBit(ans.get(0), ans.get(ans.size()-1));
+    }
+
+    for(int i=0; i<n; i++){
+      int p = ans.get(ans.size()-1);
+      int c = p ^ (1<< i);
+      if(! visited.contains(c)){
+
+
+        ans.add(c);
+        visited.add(c);
+        if(sol(n,visited,ans))
+          return true;
+        ans.remove(ans.size()-1);
+      }
+    }
+    return false;
+  }
+
   private static boolean differsByOneBit(int x, int y) {
     int bitDifference = x ^ y;
     return bitDifference != 0 && (bitDifference & (bitDifference - 1)) == 0;
