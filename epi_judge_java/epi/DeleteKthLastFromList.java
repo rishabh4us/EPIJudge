@@ -6,8 +6,26 @@ public class DeleteKthLastFromList {
 
   // Assumes L has at least k nodes, deletes the k-th last node in L.
   public static ListNode<Integer> removeKthLast(ListNode<Integer> L, int k) {
-    // TODO - you fill in here.
-    return null;
+    // create two iterators and one start node
+    ListNode<Integer> startNode = new ListNode<>(0, L);
+    ListNode<Integer> firstIterator = startNode.next;
+    ListNode<Integer> secondIterator = startNode.next;
+    // Advance first iterator by k steps
+    while(k-- > 0) {
+      firstIterator = firstIterator.next;
+    }
+
+    // Advance first and second iterator in tandem
+    while (firstIterator != null) {
+      firstIterator = firstIterator.next;
+      secondIterator = secondIterator.next;
+    }
+
+    // secondIterator has reached (k+1)th element from last. need to delete its successor
+
+    secondIterator.next = secondIterator.next.next;
+
+    return startNode;
   }
 
   public static void main(String[] args) {

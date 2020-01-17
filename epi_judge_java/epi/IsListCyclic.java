@@ -5,8 +5,41 @@ import epi.test_framework.TestFailure;
 import epi.test_framework.TimedExecutor;
 public class IsListCyclic {
 
+  // Use a fast iterator and a slow iterator. Fast iterator advances by two steps and slow by 1. If they both meet, mean there is a cycle.
   public static ListNode<Integer> hasCycle(ListNode<Integer> head) {
-    // TODO - you fill in here.
+    ListNode<Integer> slow = head, fast = head;
+
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+
+      if (slow == fast) {
+        // there is a cycle
+        // calculate cycle length. keep slow at its place, move fast around till it meets slow again
+        int length = 0;
+        do {
+          length++;
+          fast = fast.next;
+        } while (slow != fast);
+
+        // To find the start of the cycle, advance one iterator by length of cycle, start another from top.
+        // Now advance them in tandem. Then when they both meet that is the start of the cycle.
+
+        ListNode<Integer> advanceByLength = head;
+        while (length > 0) {
+          advanceByLength = advanceByLength.next;
+          length--;
+        }
+
+        ListNode<Integer> iter = head;
+
+        while (iter != advanceByLength) {
+          iter = iter.next;
+          advanceByLength = advanceByLength.next;
+        }
+        return iter; // it is the start of the cycle
+      }
+    }
     return null;
   }
   @EpiTest(testDataFile = "is_list_cyclic.tsv")

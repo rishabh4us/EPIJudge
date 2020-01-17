@@ -1,16 +1,25 @@
 package epi;
 import epi.test_framework.EpiTest;
 import epi.test_framework.GenericTest;
+
+import java.util.PriorityQueue;
+
 public class PathSum {
   @EpiTest(testDataFile = "path_sum.tsv")
 
   public static boolean hasPathSum(BinaryTreeNode<Integer> tree,
                                    int remainingWeight) {
-    // TODO - you fill in here.
-    return true;
+    if (tree == null) {
+      return false;
+    } else if (tree.left == null && tree.right == null) { // Leaf node
+      return remainingWeight == tree.data;
+    }
+
+    return hasPathSum(tree.left, remainingWeight - tree.data) || hasPathSum(tree.right, remainingWeight - tree.data);
   }
 
   public static void main(String[] args) {
+
     System.exit(
         GenericTest
             .runFromAnnotations(args, "PathSum.java",

@@ -4,22 +4,55 @@ import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 public class CircularQueue {
 
   public static class Queue {
-    public Queue(int capacity) {}
+
+    private int head = 0, tail = 0, numQueueElements = 0;
+    private Integer[] entries;
+    private int SCALE_FACTOR = 2;
+
+    public Queue(int capacity) {
+      entries = new Integer[capacity];
+    }
+
     public void enqueue(Integer x) {
-      // TODO - you fill in here.
+      if (numQueueElements == entries.length) {
+        // Need to resize the array
+        Integer[] temp = new Integer[entries.length*SCALE_FACTOR];
+
+        for (int i = 0; i < entries.length; ) {
+          temp[i] = entries[head];
+          i++;
+          head = (head+1) % entries.length;
+        }
+        head = 0;
+        tail = numQueueElements;
+        entries = temp;
+      }
+      entries[tail] = x;
+      tail = (tail+1) % entries.length;
+      ++numQueueElements;
       return;
     }
+
     public Integer dequeue() {
-      // TODO - you fill in here.
-      return 0;
+      Integer result = 0;
+      if (numQueueElements != 0) {
+        numQueueElements--;
+        result = entries[head];
+        head = (head+1) % entries.length;
+        return result;
+      }
+      throw new NoSuchElementException("Deque called on an empty queue");
     }
+
     public int size() {
-      // TODO - you fill in here.
-      return 0;
+      return numQueueElements;
     }
+
     @Override
     public String toString() {
       // TODO - you fill in here.

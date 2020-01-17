@@ -3,25 +3,70 @@ import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
 import epi.test_framework.TestFailure;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.NoSuchElementException;
 public class StackWithMax {
 
-  public static class Stack {
-    public boolean empty() {
-      // TODO - you fill in here.
-      return true;
+  private static class MaxWithCount {
+    public Integer max;
+    public Integer count;
+
+    public MaxWithCount(Integer max, Integer count) {
+      this.max = max;
+      this.count = count;
     }
+  }
+
+  public static class Stack {
+    private Deque<Integer> element = new ArrayDeque<>();
+    private Deque<MaxWithCount> cachedMaxWithCounts = new ArrayDeque<>();
+
+    public boolean empty() {
+      return element.isEmpty();
+    }
+
     public Integer max() {
-      // TODO - you fill in here.
-      return 0;
+      if (empty()) {
+        throw new IllegalStateException("max(): empty stack");
+      }
+      if (cachedMaxWithCounts.isEmpty()) {
+        throw new IllegalStateException("max(): empty stack");
+      }
+      return cachedMaxWithCounts.peekFirst().max;
     }
     public Integer pop() {
-      // TODO - you fill in here.
-      return 0;
+      if (empty()) {
+        throw new IllegalStateException("min(): empty stack");
+      }
+      Integer popElement = element.removeFirst();
+
+      // modify cachedMax stack based on this removal
+
+        if (popElement.equals(cachedMaxWithCounts.peekFirst().max)) {
+          cachedMaxWithCounts.peekFirst().count = cachedMaxWithCounts.peekFirst().count - 1;
+          if (cachedMaxWithCounts.peekFirst().count == 0) {
+            cachedMaxWithCounts.removeFirst();
+          }
+        }
+
+      return popElement;
     }
     public void push(Integer x) {
-      // TODO - you fill in here.
+      element.addFirst(x);
+      // modify cachedMax stack based on this addition
+      if (!cachedMaxWithCounts.isEmpty()) {
+        if (x > cachedMaxWithCounts.peekFirst().max) {
+          MaxWithCount newMax = new MaxWithCount(x, 1);
+          cachedMaxWithCounts.addFirst(newMax);
+        } else if (x == cachedMaxWithCounts.peekFirst().max) {
+          cachedMaxWithCounts.peekFirst().count = cachedMaxWithCounts.peekFirst().count + 1;
+        }
+      } else {
+        cachedMaxWithCounts.addFirst(new MaxWithCount(x, 1));
+      }
       return;
     }
   }
