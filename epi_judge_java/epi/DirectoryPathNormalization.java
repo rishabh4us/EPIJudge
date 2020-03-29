@@ -5,7 +5,18 @@ public class DirectoryPathNormalization {
   @EpiTest(testDataFile = "directory_path_normalization.tsv")
 
   public static String shortestEquivalentPath(String path) {
-    // TODO - you fill in here.
+    if (path.equals("")) {
+      throw new IllegalArgumentException("empty path");
+    }
+
+    // starts with '/' which is root. cannot go above root.
+
+    // split on '/'
+
+
+    // handle '..' , remove from stack unless it is '/'
+    // no-op on '.' and ''
+    // add directory or file name to string
     return "";
   }
 

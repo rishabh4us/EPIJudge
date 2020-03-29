@@ -4,14 +4,13 @@ import epi.test_framework.GenericTest;
 public class ReverseDigits {
   @EpiTest(testDataFile = "reverse_digits.tsv")
   public static long reverse(int x) {
+    // Calculate reverse and then apply the sign
     long result = 0;
-    long temp = Math.abs(x);
-
-    while (temp != 0) {
-      result = result * 10 + temp % 10;
-      temp /=10;
+    int xRemaining = Math.abs(x);
+    while (xRemaining != 0) {
+      result = result * 10 + xRemaining % 10;
+      xRemaining /= 10;
     }
-
     return x < 0 ? -result : result;
   }
 
@@ -22,4 +21,4 @@ public class ReverseDigits {
                                 new Object() {}.getClass().getEnclosingClass())
             .ordinal());
   }
-}
+};;

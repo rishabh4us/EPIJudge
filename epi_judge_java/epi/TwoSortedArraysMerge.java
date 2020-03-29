@@ -6,7 +6,17 @@ public class TwoSortedArraysMerge {
 
   public static void mergeTwoSortedArrays(List<Integer> A, int m,
                                           List<Integer> B, int n) {
-    // TODO - you fill in here.
+    int a = m - 1, b = n - 1, writeIndex = m + n - 1;
+
+    while (a >= 0 && b >= 0) {
+      A.set(writeIndex--, A.get(a) > B.get(b) ? A.get(a--) : B.get(b--) );
+    }
+
+    while (b >= 0) {
+      A.set(writeIndex--, B.get(b--));
+    }
+
+
     return;
   }
   @EpiTest(testDataFile = "two_sorted_arrays_merge.tsv")

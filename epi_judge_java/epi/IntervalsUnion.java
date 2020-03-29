@@ -1,4 +1,5 @@
 package epi;
+import com.sun.corba.se.spi.activation.EndPointInfo;
 import epi.test_framework.EpiTest;
 import epi.test_framework.EpiUserType;
 import epi.test_framework.GenericTest;
@@ -19,8 +20,55 @@ public class IntervalsUnion {
   }
 
   public static List<Interval> unionOfIntervals(List<Interval> intervals) {
-    // TODO - you fill in here.
-    return Collections.emptyList();
+
+    // empty list
+    if (intervals.isEmpty()) {
+      return Collections.EMPTY_LIST;
+    }
+
+    // sort the intervals
+    intervals.sort((a,b) -> {
+      if (Integer.compare(a.left.val, b.left.val) != 0) {
+        return a.left.val - b.left.val;
+      }
+      if (a.left.isClosed && !b.left.isClosed) {
+        return -1;
+      }
+      return !a.left.isClosed && b.left.isClosed ? 1 : 0;
+    });
+
+    List<Interval> result = new ArrayList<>();
+    result.add(intervals.get(0));
+    int i = 1;
+    while (i < intervals.size()) {
+      if (intervals.get(i).left.val > result.get(i-1).right.val) {
+        result.add(intervals.get(i));
+        i++;
+      } else {
+        if (result.get(i-1).left.val < intervals.get(i).left.val) {
+          result.get(i-1).left.isClosed = result.get(i-1).left.isClosed;
+        } else if (result.get(i-1).left.val > intervals.get(i).left.val) {
+          result.get(i-1).left.isClosed = intervals.get(i).left.isClosed;
+        } else {
+          result.get(i-1).left.isClosed = result.get(i-1).left.isClosed || intervals.get(i).left.isClosed;
+        }
+
+        if (result.get(i-1).right.val < intervals.get(i).right.val) {
+          result.get(i-1).right.isClosed = intervals.get(i).right.isClosed;
+        } else if (result.get(i-1).right.val > intervals.get(i).right.val) {
+          result.get(i-1).right.isClosed = result.get(i-1).right.isClosed;
+        } else {
+          result.get(i-1).right.isClosed = result.get(i-1).right.isClosed || intervals.get(i).right.isClosed;
+        }
+
+        result.get(i-1).left.val = Math.min(result.get(i-1).left.val, intervals.get(i).left.val);
+        result.get(i-1).right.val = Math.max(result.get(i-1).right.val, intervals.get(i).right.val);
+        i++;
+      }
+    }
+
+
+    return result;
   }
   @EpiUserType(
       ctorParams = {int.class, boolean.class, int.class, boolean.class})
